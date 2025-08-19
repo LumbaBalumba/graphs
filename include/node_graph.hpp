@@ -40,7 +40,7 @@ public:
         double x;
         double y;
 
-        Node(id_t id, T &&value) : id(id), value(value), neighbors({}) {}
+        Node(id_t id, T &&value, double x, double y) : id(id), value(value), neighbors({}), x(x), y(y) {}
     };
     std::unordered_map<id_t, std::unique_ptr<Node>> nodes;
 
@@ -49,8 +49,12 @@ public:
 
     NodeGraph() = default;
 
-    NodeGraph(const NodeGraph<T> &) = default;
+    // Delete copy constructor and copy assignment operator
+    NodeGraph(const NodeGraph<T> &) = delete;
+    NodeGraph &operator=(const NodeGraph<T> &) = delete;
+
     NodeGraph(NodeGraph<T> &&) noexcept = default;
+    NodeGraph &operator=(NodeGraph<T> &&) noexcept = default;
 
     ~NodeGraph() noexcept = default;
 
@@ -64,17 +68,17 @@ public:
 
 
     void
-    add_node(T arg)
+    add_node(T arg, double x = 0.0, double y = 0.0)
     {
         auto id = id_gen_.generate();
         nodes[id] = std::make_unique<Node>(id, arg);
     }
 
     void
-    add_node()
+    add_node(double x = 0.0, double y = 0.0)
     {
         auto id = id_gen_.generate();
-        nodes[id] = std::make_unique<Node>(id, T{});
+        nodes[id] = std::make_unique<Node>(id, T{}, x, y);
     }
 
 
