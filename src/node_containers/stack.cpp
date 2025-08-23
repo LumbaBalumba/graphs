@@ -2,12 +2,12 @@
 #include "node_graph.hpp"
 
 void
-node_containers::StackNodeContainer::push(NodeGraph<>::id_t node_id, double)
+node_containers::StackNodeContainer::push(node_id_t node_id, double)
 {
     container_.push(node_id);
 }
 
-NodeGraph<>::id_t
+node_id_t
 node_containers::StackNodeContainer::pop()
 {
     auto node_id = container_.top();

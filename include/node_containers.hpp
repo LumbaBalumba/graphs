@@ -1,7 +1,6 @@
 #include "node_graph.hpp"
 #include <functional>
 #include <queue>
-#include <ranges>
 #include <stack>
 #include <utility>
 #include <vector>
@@ -10,7 +9,6 @@
 
 namespace node_containers
 {
-    template<class D>
     class AbstractNodeContainer
     {
     public:
@@ -19,24 +17,23 @@ namespace node_containers
         virtual ~AbstractNodeContainer() = default;
 
         virtual void
-        push(NodeGraph<>::id_t node_id, double = 0.0);
+        push(node_id_t node_id, double = 0.0)
+        {}
 
-        virtual NodeGraph<>::id_t
-        pop();
+        virtual node_id_t
+        pop()
+        {
+            return 1;
+        }
 
         virtual bool
-        empty() const;
-
-        template<class Range>
-            requires(std::ranges::range<Range>)
-        void
-        push_range(const Range &range)
+        empty() const
         {
-            static_cast<D *>(this)->template _push_range<Range>(range);
+            return true;
         }
     };
 
-    class StackNodeContainer : public AbstractNodeContainer<StackNodeContainer>
+    class StackNodeContainer : public AbstractNodeContainer
     {
     private:
         std::stack<id_t> container_;
@@ -46,53 +43,36 @@ namespace node_containers
         ~StackNodeContainer() override = default;
 
         void
-        push(NodeGraph<>::id_t node_id, double = 0.0) override;
+        push(node_id_t node_id, double = 0.0) override;
 
-        NodeGraph<>::id_t
+        node_id_t
         pop() override;
 
         bool
         empty() const override;
-
-        template<class Range>
-            requires(std::ranges::range<Range>)
-        void
-        push_range(const Range &range)
-        {
-            container_.push_range(range);
-        }
     };
 
-    class QueueNodeContainer : public AbstractNodeContainer<QueueNodeContainer>
+    class QueueNodeContainer : public AbstractNodeContainer
     {
     private:
-        std::queue<NodeGraph<>::id_t> container_;
+        std::queue<node_id_t> container_;
 
     public:
         QueueNodeContainer() = default;
         ~QueueNodeContainer() override = default;
 
         void
-        push(NodeGraph<>::id_t node_id, double) override;
+        push(node_id_t node_id, double = 0.0) override;
 
-        NodeGraph<>::id_t
+        node_id_t
         pop() override;
 
         bool
         empty() const override;
-
-
-        template<class Range>
-            requires(std::ranges::range<Range>)
-        void
-        _push_range(const Range &range)
-        {
-            container_.push_range(range);
-        }
     };
 
 
-    class PriorityQueueNodeContainer : public AbstractNodeContainer<PriorityQueueNodeContainer>
+    class PriorityQueueNodeContainer : public AbstractNodeContainer
     {
     private:
         using element_t = std::pair<double, id_t>;
@@ -103,21 +83,12 @@ namespace node_containers
         ~PriorityQueueNodeContainer() override = default;
 
         void
-        push(NodeGraph<>::id_t node_id, double weight) override;
+        push(node_id_t node_id, double weight = 0.0) override;
 
-        NodeGraph<>::id_t
+        node_id_t
         pop() override;
 
         bool
         empty() const override;
-
-
-        template<class Range>
-            requires(std::ranges::range<Range>)
-        void
-        _push_range(const Range &range)
-        {
-            container_.push_range(range);
-        }
     };
 }// namespace node_containers

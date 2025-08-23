@@ -2,12 +2,12 @@
 #include "node_graph.hpp"
 
 void
-node_containers::PriorityQueueNodeContainer::push(NodeGraph<>::id_t node_id, double weight)
+node_containers::PriorityQueueNodeContainer::push(node_id_t node_id, double weight)
 {
     container_.emplace(weight, node_id);
 }
 
-NodeGraph<>::id_t
+node_id_t
 node_containers::PriorityQueueNodeContainer::pop()
 {
     auto node_id = container_.top().second;
