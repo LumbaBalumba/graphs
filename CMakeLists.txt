@@ -6,13 +6,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_BUILD_TYPE Release)
 
-include_directories(task PRIVATE include)
+include_directories(graphs INTERFACE include)
 
 find_package(Boost REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-link_libraries(${Boost_LIBRARIES})
 
 file(GLOB NODE_CONTAINERS_SOURCES src/node_containers/*.cpp)
 add_library(node_containers ${NODE_CONTAINERS_SOURCES})
-link_libraries(node_containers)
-add_library(graphs src/lib.cpp)
+target_include_directories(node_containers PRIVATE ${Boost_INCLUDE_DIRS})
+target_link_libraries(node_containers PRIVATE ${Boost_LIBRARIES})
+
+add_library(graphs INTERFACE)
