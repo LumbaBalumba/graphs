@@ -15,5 +15,3 @@ link_libraries(${Boost_LIBRARIES})
 file(GLOB NODE_CONTAINERS_SOURCES src/node_containers/*.cpp)
 add_library(node_containers ${NODE_CONTAINERS_SOURCES})
 link_libraries(node_containers)
-
-add_executable(main src/main.cpp)

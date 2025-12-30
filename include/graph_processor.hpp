@@ -165,7 +165,7 @@ concept HasDistance = requires(T a, T b) {
     { a.distance(b) } -> std::convertible_to<double>;
 };
 
-template<class T = PositionMetadata>
+template<class T = PositionMetadata<2>>
     requires(HasDistance<T>)
 class AStarProcessor : public DijkstraProcessor<T>
 {

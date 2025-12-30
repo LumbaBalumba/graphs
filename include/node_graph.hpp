@@ -1,6 +1,8 @@
+#include <array>
 #include <cmath>
 #include <cstddef>
 #include <memory>
+#include <ranges>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -19,13 +21,13 @@ struct EmptyMetadata {
     EmptyMetadata(EmptyMetadata &&) = default;
 };
 
+template<std::size_t N = 2>
 struct PositionMetadata {
-    double x;
-    double y;
+    std::array<double, N> coords;
 
     PositionMetadata() = default;
 
-    PositionMetadata(double x, double y) : x(x), y(y) {}
+    PositionMetadata(std::array<double, N> &&vals) : coords(vals) {}
 
     PositionMetadata(const PositionMetadata &) = default;
 
@@ -34,9 +36,12 @@ struct PositionMetadata {
     double
     distance(const PositionMetadata &other)
     {
-        double x = this->x - other.x;
-        double y = this->y - other.y;
-        return sqrt(x * x + y * y);
+        auto sqsm = 0;
+        for (auto [x1, x2]: std::ranges::views::zip(coords, other.coords)) {
+            auto diff = x1 - x2;
+            sqsm += diff * diff;
+        }
+        return sqrt(sqsm);
     }
 };
 
